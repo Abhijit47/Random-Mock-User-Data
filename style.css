@@ -1,0 +1,8 @@
+.alertWrapper {
+  top: 1rem !important;
+  z-index: 3;
+}
+
+header {
+  z-index: 2;
+}
