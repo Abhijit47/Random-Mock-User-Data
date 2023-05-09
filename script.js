@@ -82,7 +82,7 @@ const displayData = async () => {
           type="button"
           class="btn btn-outline-info bg-gradient text-dark"
           data-bs-toggle="modal"
-          data-bs-target="#staticBackdrop"
+          data-bs-target="#updateuser"
           onClick=editUser(${id})>
           Edit
           <i class="bi bi-pencil-square"></i>
@@ -146,7 +146,7 @@ const displayData = async () => {
                 type="submit"
                 class="btn btn-outline-warning update"
                 data-bs-dismiss="modal"
-                onClick=updateUser()>
+                onClick=updateUser(${id})>
                 Update
               </button>
             </div>
@@ -214,6 +214,9 @@ form.addEventListener('submit', createUser);
 const editUser = async (id) => {
   // console.log(id);
   // console.log("edited");
+  const updatedName = document.querySelector('.uname');
+  const updatedEmail = document.querySelector('.uemail');
+  const updatedAvatar = document.querySelector('.uavatar');
 
   try {
     const response = await fetch(`${apiURL}/${id}`, {
@@ -230,9 +233,12 @@ const editUser = async (id) => {
     const { name, email, avatar } = user;
 
     // fill again ther user field
-    getName.value = name;
-    getEmail.value = email;
-    getAvatar.value = avatar;
+    // getName.value = name;
+    // getEmail.value = email;
+    // getAvatar.value = avatar;
+    updatedName.value = name;
+    updatedEmail.value = email;
+    updatedAvatar.value = avatar;
 
   } catch (error) {
     alertBox.classList.replace("fade", "show");
@@ -269,50 +275,46 @@ const deleteUser = async (id) => {
 };
 
 
-/*
-const updateUser = async (data) => {
-  console.log("Hello");
+
+const updateUser = async (id) => {
+  console.log(id);
   console.log("updated");
-  // const updatedData = await editUser();
-  // console.log(updatedData);
-  console.log(data);
+  const updatedName = document.querySelector('.uname');
+  const updatedEmail = document.querySelector('.uemail');
+  const updatedAvatar = document.querySelector('.uavatar');
 
+  const updateFormData = {
+    name: updatedName.value.trim(),
+    email: updatedEmail.value,
+    avatar: updatedAvatar.value
+  };
 
+  console.log(updateFormData);
+  try {
+    const response = await fetch(`${apiURL}/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(updateFormData),
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
 
-  // const updateFormData = {
-  //   name: updateUserName.value.trim(),
-  //   email: updateUserEmail.value,
-  //   avatar: updateUserAvatar.value
-  // };
+    console.log(response);
+    const user = await response.json();
+    console.log(user);
+    displayData();
 
-  // console.log(updateFormData);
-  // try {
-  //   const response = await fetch(`${apiURL}/${id}`, {
-  //     method: "PATCH",
-  //     mode: "cors",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     }
-  //   });
+    alertBox.classList.replace("fade", "show");
+    errorMsg.innerHTML = "Successfully updated";
 
-  //   console.log(response);
-  //   const user = await response.json();
-  //   console.log(user);
-
-  //   const { name, email, avatar } = user;
-  //   // fill again ther user field
-  //   getName.value = name;
-  //   getEmail.value = email;
-  //   getAvatar.value = avatar;
-
-  // } catch (error) {
-  //   alertBox.classList.replace("fade", "show");
-  //   errorMsg.innerHTML = "Bad Request";
-  //   console.error(error);
-  // }
+  } catch (error) {
+    alertBox.classList.replace("fade", "show");
+    errorMsg.innerHTML = "Bad Request";
+    console.error(error);
+  }
 
 };
 
 
 // updateForm.addEventListener('submit', updateUser);
-*/
+
